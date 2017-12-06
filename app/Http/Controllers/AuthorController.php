@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Author;
 use Illuminate\Http\Request;
-use DataTables;
+use App\Author;
 use Yajra\DataTables\Html\Builder;
+use DataTables;
 use Session;
 
 class AuthorController extends Controller
@@ -25,6 +25,7 @@ class AuthorController extends Controller
               'model' => $author,
               'form_url' => route('authors.destroy', $author->id),
               'edit_url' => route('authors.edit', $author->id),
+              'confirm_message' => 'Yakin akan menghapus ' . $author->name . '?',
             ]);
           })
         ->toJson();
