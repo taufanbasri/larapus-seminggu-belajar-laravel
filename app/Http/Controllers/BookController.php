@@ -116,7 +116,9 @@ class BookController extends Controller
      */
     public function update(BookRequest $request, Book $book)
     {
-      $book->update($request->all());
+      if (!$book->update($request->all())) {
+        return redirect()->back();
+      }
 
       if ($request->hasFile('cover')) {
         $filename = null;
