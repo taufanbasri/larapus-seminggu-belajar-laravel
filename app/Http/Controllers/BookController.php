@@ -8,7 +8,10 @@ use Yajra\DataTables\Html\Builder;
 use DataTables;
 use Session;
 use File;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests\BookRequest;
+use App\BorrowLog;
+use App\Exceptions\BookException;
 
 class BookController extends Controller
 {
@@ -172,5 +175,29 @@ class BookController extends Controller
       } catch (FileNotFoundException $e) {
         // File sudah dihapus/tidak ada
       }
+    }
+
+    public function borrow(Book $book)
+    {
+      try {
+        auth()->user()->borrow($book);
+
+        Session::flash("flash_notification", [
+          "level"=>"success",
+          "message"=>"Berhasil meminjam $book->title"
+        ]);
+      } catch (BookException $e) {
+        Session::flash("flash_notification", [
+          "level" => "danger",
+          "message" => $e->getMessage()
+        ]);
+      } catch (ModelNotFoundException $e) {
+        Session::flash("flash_notification", [
+          "level"=>"danger",
+          "message"=>"Buku tidak ditemukan."
+        ]);
+      }
+
+      return redirect('/');;
     }
 }
