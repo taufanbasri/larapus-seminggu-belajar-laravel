@@ -8,6 +8,7 @@ use Yajra\DataTables\Html\Builder;
 use DataTables;
 use Session;
 use File;
+use App\Http\Requests\BookRequest;
 
 class BookController extends Controller
 {
@@ -59,15 +60,8 @@ class BookController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BookRequest $request)
     {
-      $this->validate($request, [
-        'title' => 'required|unique:books,title',
-        'author_id' => 'required|exists:authors,id',
-        'amount' => 'required|numeric',
-        'cover' => 'image|max:2048'
-      ]);
-
       $book = Book::create($request->except('cover'));
 
       if ($request->hasFile('cover')) {
@@ -117,15 +111,8 @@ class BookController extends Controller
      * @param  \App\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Book $book)
+    public function update(BookRequest $request, Book $book)
     {
-      $this->validate($request, [
-        'title' => 'required|unique:books,title,' . $book->id,
-        'author_id' => 'required|exists:authors,id',
-        'amount' => 'required|numeric',
-        'cover' => 'image|max:2048'
-      ]);
-
       $book->update($request->all());
 
       if ($request->hasFile('cover')) {

@@ -7,6 +7,7 @@ use App\Author;
 use Yajra\DataTables\Html\Builder;
 use DataTables;
 use Session;
+use App\Http\Requests\AuthorRequest;
 
 class AuthorController extends Controller
 {
@@ -56,10 +57,8 @@ class AuthorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AuthorRequest $request)
     {
-      $this->validate($request, ['name' => 'required|unique:authors']);
-
       $author = Author::create($request->all());
 
       Session::flash("flash_notification", [
@@ -99,10 +98,8 @@ class AuthorController extends Controller
      * @param  \App\Author  $author
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Author $author)
+    public function update(AuthorRequest $request, Author $author)
     {
-        $this->validate($request, ['name' => 'required|unique:authors,name,'. $author->id]);
-
         $author->update($request->only('name'));
 
         Session::flash("flash_notification", [
