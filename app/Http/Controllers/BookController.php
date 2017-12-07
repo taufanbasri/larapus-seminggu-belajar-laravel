@@ -152,11 +152,15 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-      if ($book->cover) {
-        $this->deleteCover($book);
+      $cover = $book->cover;
+
+      if (!$book->delete()) {
+        return redirect()->back();
       }
 
-      $book->delete();
+      if ($cover) {
+        $this->deleteCover($book);
+      }
 
       Session::flash("flash_notification", [
         "level"=>"success",
