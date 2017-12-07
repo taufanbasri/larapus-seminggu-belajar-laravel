@@ -137,15 +137,7 @@ class BookController extends Controller
         $uploaded_cover->move($destinationPath, $filename);
 
         if ($book->cover) {
-          $old_cover = $book->cover;
-          $filepath = public_path() . DIRECTORY_SEPARATOR . 'img'
-          . DIRECTORY_SEPARATOR . $book->cover;
-
-          try {
-            File::delete($filepath);
-          } catch (FileNotFoundException $e) {
-            // File sudah dihapus/tidak ada
-          }
+          $this->deleteCover($book);
         }
 
         $book->cover = $filename;
@@ -169,15 +161,7 @@ class BookController extends Controller
     public function destroy(Book $book)
     {
       if ($book->cover) {
-        $old_cover = $book->cover;
-        $filepath = public_path() . DIRECTORY_SEPARATOR . 'img'
-        . DIRECTORY_SEPARATOR . $book->cover;
-
-        try {
-          File::delete($filepath);
-        } catch (FileNotFoundException $e) {
-          // File sudah dihapus/tidak ada
-        }
+        $this->deleteCover($book);
       }
 
       $book->delete();
@@ -188,5 +172,18 @@ class BookController extends Controller
       ]);
 
       return redirect()->route('books.index');
+    }
+
+    public function deleteCover($book)
+    {
+      $old_cover = $book->cover;
+      $filepath = public_path() . DIRECTORY_SEPARATOR . 'img'
+      . DIRECTORY_SEPARATOR . $book->cover;
+
+      try {
+        File::delete($filepath);
+      } catch (FileNotFoundException $e) {
+        // File sudah dihapus/tidak ada
+      }
     }
 }
