@@ -200,4 +200,25 @@ class BookController extends Controller
 
       return redirect('/');;
     }
+
+    public function returnBack(Book $book)
+    {
+      $borrowLog = BorrowLog::where([
+        ['user_id', auth()->user()->id],
+        ['book_id', $book->id],
+        ['is_returned', 0]
+      ])->first();
+
+      if ($borrowLog) {
+        $borrowLog->is_returned = true;
+        $borrowLog->save();
+
+        Session::flash("flash_notification", [
+          "level" => "success",
+          "message" => "Berhasil mengembalikan " . $borrowLog->book->title
+        ]);
+      }
+
+      return redirect('/home');
+    }
 }
