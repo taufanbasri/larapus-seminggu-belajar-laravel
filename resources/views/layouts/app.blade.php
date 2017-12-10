@@ -67,6 +67,9 @@
                                 </a>
 
                                 <ul class="dropdown-menu">
+                                  <li>
+                                    <a href="{{ url('/settings/password') }}"><i class="fa fa-lock"></i> Ubah Password</a>
+                                  </li>
                                     <li>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
