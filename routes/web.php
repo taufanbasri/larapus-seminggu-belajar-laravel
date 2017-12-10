@@ -21,6 +21,8 @@ Route::group(['prefix'=>'admin', 'middleware'=>['auth', 'role:admin']], function
   Route::resource('authors', 'AuthorController');
   Route::resource('books', 'BookController');
   Route::resource('members', 'MembersController');
+
+  Route::get('statistics', 'StatisticsController@index')->name('statistics.index');
 });
 
 Route::get('books/{book}/borrow', [
