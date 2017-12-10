@@ -24,6 +24,9 @@ class MembersController extends Controller
         $members = Role::where('name', 'member')->first()->users;
 
         return Datatables::of($members)
+        ->addColumn('name', function($member) {
+            return '<a href="'.route('members.show', $member->id).'">'.$member->name.'</a>';
+          })
           ->addColumn('action', function($member){
             return view('datatable._action', [
             'model' => $member,
@@ -31,7 +34,9 @@ class MembersController extends Controller
             'edit_url' => route('members.edit', $member->id),
             'confirm_message' => 'Yakin mau menghapus ' . $member->name . '?'
             ]);
-          })->toJson();
+          })
+          ->rawColumns(['name', 'action'])
+          ->toJson();
       }
 
       $html = $htmlBuilder->columns([
@@ -95,7 +100,9 @@ class MembersController extends Controller
      */
     public function show($id)
     {
-        //
+      $member = User::find($id);
+      
+      return view('members.show', compact('member'));
     }
 
     /**
